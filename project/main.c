@@ -7,8 +7,12 @@
 #define LED_GREEN BIT6        // P1.6
 
 short redrawScreen = 1;
-u_int row = screenHeight/2;
+u_int row = 0;
 u_int col = screenWidth;
+u_int car_right = (screenWidth/2 + 8);
+
+void make_car();
+void make_road();
 
 void wdt_c_handler()
 {
@@ -17,7 +21,7 @@ void wdt_c_handler()
   count++;
   if (count == 20) {
     count = 0;
-    col--;
+    row++;
     redrawScreen = 1;
   }
 }
@@ -33,31 +37,61 @@ void main()
   or_sr(0x8);                 // GIE (enable interrupts)
   u_char width = screenWidth, height = screenHeight;
 
-  clearScreen(COLOR_WHITE);
+  clearScreen(COLOR_FOREST_GREEN);
+
+  make_road();
+  make_car(0);
 
   while (1) {
     if (redrawScreen) {
       redrawScreen = 0;
-      if (col == 0) {
-	col = screenWidth;
-	clearScreen(COLOR_WHITE);
+      if (row == screenHeight + 3) {
+	row = 0;
       }
-      for (int r = 0; r < 10; r++) {
-	for (int c = 0; c < r; c++) {
-	  drawPixel(col + c + 7, r + row - 10, COLOR_BLACK);
-	  drawPixel(col - c + 7, r + row - 10, COLOR_BLACK);
-	  drawPixel(col + c + 8, r + row - 10, COLOR_WHITE);
-	}
-      }
-      for (int i = 0; i < 15; i++) {
-	for (int j = 0; j < 15; j++) {
-	  drawPixel(i + col, j + row, COLOR_BLACK);
-	  drawPixel(i + col + 15, j + row, COLOR_WHITE);
-	}
-      }
+      make_rock();
     }
     P1OUT &= ~LED_GREEN;      // green off
     or_sr(0x10);              // CPU off
     P1OUT |= LED_GREEN;       // green on
+  }
+}
+
+void make_road()
+{
+  int count = 0;
+  for (int r = 0; r < screenHeight; r++) {
+    for (int c = 0; c < 60; c++) {
+      drawPixel(c + 35, r, COLOR_GRAY);
+    }
+    if (count < 5 == 0) {
+      drawPixel(65, r, COLOR_YELLOW);
+    }
+    if (count == 10) count = 0;
+    count++;
+  }
+}
+
+void make_car()
+{
+  int position = car_right;
+ 
+  for (int r = 0; r < 30; r++) {
+    for (int c = 0; c < 16; c++) {
+      drawPixel(c + position, r + (screenHeight - 35), COLOR_BLUE);
+    }
+  }
+  for (int i = 0; i < 16; i++) {
+    drawPixel(i + position, (screenHeight - 25), COLOR_BLACK);
+    drawPixel(i + position, (screenHeight - 15), COLOR_BLACK);
+  }
+}
+
+void make_rock()
+{
+  for (int r = 0; r < 5; r++) {
+    for (int c = 0; c < 5; c++) {
+      drawPixel(c + (screenWidth/2 + 12), r + row, COLOR_CHOCOLATE);
+      drawPixel(c + (screenWidth/2 + 12), r + row - 6, COLOR_GRAY);
+    }
   }
 }
