@@ -2,18 +2,17 @@
 #include <libTimer.h>
 #include <lcdutils.h>
 #include <lcddraw.h>
-#include <p2switches.h>
+#include "switches.h"
 
 #define LED_GREEN BIT6        // P1.6
 
 short redrawScreen = 1;
 u_int row = 0;
 u_int col = screenWidth;
-u_int car_right = (screenWidth/2 + 8);
-
-void make_car();
-void make_road();
-
+u_int car_position = 0;
+u_int right = (screenWidth/2 + 8);
+u_int left = (screenWidth/2 - 20);
+  
 void wdt_c_handler()
 {
   static int count = 0;
@@ -73,16 +72,16 @@ void make_road()
 
 void make_car()
 {
-  int position = car_right;
+  car_position = left;
  
   for (int r = 0; r < 30; r++) {
     for (int c = 0; c < 16; c++) {
-      drawPixel(c + position, r + (screenHeight - 35), COLOR_BLUE);
+      drawPixel(c + car_position, r + (screenHeight - 35), COLOR_BLUE);
     }
   }
   for (int i = 0; i < 16; i++) {
-    drawPixel(i + position, (screenHeight - 25), COLOR_BLACK);
-    drawPixel(i + position, (screenHeight - 15), COLOR_BLACK);
+    drawPixel(i + car_position, (screenHeight - 25), COLOR_BLACK);
+    drawPixel(i + car_position, (screenHeight - 15), COLOR_BLACK);
   }
 }
 
@@ -93,5 +92,9 @@ void make_rock()
       drawPixel(c + (screenWidth/2 + 12), r + row, COLOR_CHOCOLATE);
       drawPixel(c + (screenWidth/2 + 12), r + row - 6, COLOR_GRAY);
     }
+  }
+  if (car_position == right && row == screenHeight - 40) {
+    row = 0;
+    drawString5x7(40, screenHeight/2, "GAME OVER", COLOR_RED, COLOR_GRAY);
   }
 }
