@@ -2,6 +2,7 @@
 #include <libTimer.h>
 #include <lcdutils.h>
 #include <lcddraw.h>
+#include "main.h"
 #include "switches.h"
 
 #define LED_GREEN BIT6        // P1.6
@@ -9,9 +10,10 @@
 short redrawScreen = 1;
 u_int row = 0;
 u_int col = screenWidth;
-u_int car_position = 0;
-u_int right = (screenWidth/2 + 8);
-u_int left = (screenWidth/2 - 20);
+int car_position = (screenWidth/2 - 20);
+int right = (screenWidth/2 + 8);
+int left = (screenWidth/2 - 20);
+int car_color = COLOR_BLUE;
   
 void wdt_c_handler()
 {
@@ -19,6 +21,7 @@ void wdt_c_handler()
 
   count++;
   if (count == 20) {
+    switch_interrupt_handler();
     count = 0;
     row++;
     redrawScreen = 1;
@@ -39,7 +42,6 @@ void main()
   clearScreen(COLOR_FOREST_GREEN);
 
   make_road();
-  make_car(0);
 
   while (1) {
     if (redrawScreen) {
@@ -47,6 +49,7 @@ void main()
       if (row == screenHeight + 3) {
 	row = 0;
       }
+      make_car();
       make_rock();
     }
     P1OUT &= ~LED_GREEN;      // green off
@@ -72,11 +75,9 @@ void make_road()
 
 void make_car()
 {
-  car_position = left;
- 
   for (int r = 0; r < 30; r++) {
     for (int c = 0; c < 16; c++) {
-      drawPixel(c + car_position, r + (screenHeight - 35), COLOR_BLUE);
+      drawPixel(c + car_position, r + (screenHeight - 35), car_color);
     }
   }
   for (int i = 0; i < 16; i++) {

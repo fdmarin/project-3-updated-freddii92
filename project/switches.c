@@ -1,9 +1,9 @@
 #include <msp430.h>
 #include "switches.h"
 #include "main.h"
-#include "buzzer.h"
-#include <lcdutils.h>
-#include <lcddraw.h>
+//#include "buzzer.h"
+#include "lcdutils.h"
+#include "lcddraw.h"
 
 char switch_state_down, switch_state_changed;         // effectively boolean
 
@@ -23,15 +23,15 @@ void switch_init()                                    // setup switch
   P2OUT |= SWITCHES;                                  // pull-ups for switches
   P2DIR &= ~SWITCHES;                                 // set switches' bits for input
   switch_update_interrupt_sense();
-  led_update();
+  //led_update();
 }
 
 void switch_interrupt_handler()
 {
   char p2val = switch_update_interrupt_sense();
- 
+
   if (!(p2val & SW1)) {                               // if switch S1 is pushed
-    drawString5x7(50, 50, "Alfredo", COLOR_BLUE, COLOR_BLACK);
+    car_color = COLOR_RED;
     switch_state_down = 1;
   }
   else if (!(p2val & SW2)) {                          // if switch S2 is pushed                    
@@ -43,7 +43,10 @@ void switch_interrupt_handler()
   else if (!(p2val & SW4)) {                          // is switch S4 is pushed
     switch_state_down = 1;
   }
+  else {
+    car_color = COLOR_BLUE;
+  }
   
   switch_state_changed = 1;
-  led_update();
+  //led_update();
 }
