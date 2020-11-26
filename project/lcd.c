@@ -17,6 +17,7 @@ u_int tree_one = 50;
 u_int tree_two = 100;
 u_int tree_three = 150;
 u_int col = screenWidth;
+u_int font_color = COLOR_RED;
 int car_position = (screenWidth/2 - 20);
 int right = (screenWidth/2 + 8);
 int left = (screenWidth/2 - 20);
@@ -32,6 +33,7 @@ void wdt_c_handler()
   count++;
   if (count == 20) {
     count = 0;
+    font_color = (font_color == COLOR_RED) ? COLOR_BLUE : COLOR_RED;
     rock_one_row++;
     rock_two_row++;
     rock_three_row++;
@@ -63,7 +65,7 @@ void main()
 
   make_road();
   make_car();
-
+  
   while (1) {
     if (redrawScreen) {
       redrawScreen = 0;
@@ -73,6 +75,7 @@ void main()
       if (tree_one       == screenHeight + 10) tree_one       = 0;
       if (tree_two       == screenHeight + 10) tree_two       = 0;
       if (tree_three     == screenHeight + 10) tree_three     = 0;
+      drawString11x16(40, 0, "COPS", font_color, COLOR_GRAY);
       make_siren();
       make_rock();
       make_tree();
