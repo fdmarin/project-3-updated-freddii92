@@ -18,12 +18,12 @@
 #define F 710
 #define D 840
 
+char changed = 0;
 
 char red_led_on()                      // turning red LED on and green LED off
 {
   red_on = 1;
   green_on = 0;
-  car_color = COLOR_RED;
   led_update();
 }
 
@@ -31,7 +31,6 @@ char green_led_on()                    // turning green LED on and red LED off
 {
   red_on = 0;
   green_on = 1;
-  car_color = COLOR_BLUE;
   led_update();
 }
 
@@ -53,6 +52,8 @@ void idle_state()                     // idle state (nothing happens)
 {
   both_off();
   buzzer_set_period(0);
+  left_siren = COLOR_BLACK;
+  right_siren = COLOR_BLACK;
 }
 
 void twinkle_advance()                // alternate between toggling red and green LEDs
@@ -97,19 +98,19 @@ void twinkle_advance()                // alternate between toggling red and gree
   led_update();
 }
 
-void dimmer_advance()                 // dim LEDs
-{
-  static char changed = 0;
+//void dimmer_advance();                 // dim LEDs
+//{
+//static char changed = 0;
   
-  led_changed = 1;
+//led_changed = 1;
   
-  switch(changed) {                   // switch statement to toggle LEDs
-  case 0: red_led_on(); changed++; break;
-  case 1: green_led_on(); changed = 0; break;
-  }
+//switch(changed) {                   // switch statement to toggle LEDs
+//case 0: red_led_on(); changed++; break;
+//case 1: both_off(); changed = 0; break;
+//}
   
-  led_update();
-}
+//led_update();
+//}
 
 void happy_birthday()                 // happy birthday song
 {
@@ -177,12 +178,11 @@ void siren()                          // siren plays
 {
   static char changed = 0;
 
-  led_changed = 1;
-
   switch (changed) {                  // switch statement to toggle LEDs and sounds
   case 0: red_led_on(); buzzer_set_period(5000); changed++; break;
   case 1: green_led_on(); buzzer_set_period(1000); changed = 0; break;
   }
-  
+
+  led_changed = 1;
   led_update();
 }

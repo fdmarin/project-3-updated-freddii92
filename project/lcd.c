@@ -31,7 +31,7 @@ void wdt_c_handler()
   static char blink_count = 0;
 
   count++;
-  if (count == 20) {
+  if (count == 30) {
     count = 0;
     font_color = (font_color == COLOR_RED) ? COLOR_BLUE : COLOR_RED;
     rock_one_row++;

@@ -50,8 +50,8 @@ void switch_interrupt_handler()
   }
   else if (!(p2val & SW3)) {                          // if switch S3 is pushed
     speed = 4;
-    dimmer_advance();
-    switch_state_down = 1;
+    char one = dimmer_advance(1);
+    switch_state_down = one;
   }
   else if (!(p2val & SW4)) {                          // is switch S4 is pushed
     speed = 80;

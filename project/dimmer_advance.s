@@ -20,9 +20,9 @@ dimmer_advance:
 	jhs end			; jmp if changed > 1
 
 	;; index into jt
-	mov.b &changed, r12
-	add.b r12, r12		; r12 = 2*changed
-	mov jt(r12), r0		; jmp jt[changed]
+	mov.b &changed, r13
+	add.b r13, r13		; r13 = 2*changed
+	mov jt(r13), r0		; jmp jt[changed]
 
 	;; switch table options
 	;; same order as in source
@@ -33,6 +33,7 @@ case0:	call #red_led_on	; red_led_on()
 case1:	call #both_off		; both_off()
 	mov.b #0, &changed	; changed = 0
 	jmp end			; break
-end:	mov #1, &led_changed
+end:	mov #12, &led_changed	; led_changed = 1
 	call #led_update	; led_update()
+	mov.b #1, r12		; this is to return 1
 	pop r0

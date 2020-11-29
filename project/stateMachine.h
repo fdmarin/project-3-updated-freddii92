@@ -3,7 +3,7 @@
 
 void twinkle_advance();
 void idle_state();
-void dimmer_advance();
+char dimmer_advance(unsigned char one);
 void happy_birthday();
 void siren();
 
