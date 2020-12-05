@@ -93,7 +93,7 @@ void make_road()
     for (int c = 0; c < 60; c++) {
       drawPixel(c + 35, r, COLOR_GRAY);
     }
-    if (count < 5 == 0) {
+    if (count < 5) {
       drawPixel(65, r, COLOR_YELLOW);
     }
     if (count == 10) count = 0;
