@@ -33,7 +33,7 @@ case0:	call #red_led_on	; red_led_on()
 case1:	call #both_off		; both_off()
 	mov.b #0, &changed	; changed = 0
 	jmp end			; break
-end:	mov #12, &led_changed	; led_changed = 1
+end:	mov r12, &led_changed	; led_changed = 1
 	call #led_update	; led_update()
 	mov.b #1, r12		; this is to return 1
 	pop r0
