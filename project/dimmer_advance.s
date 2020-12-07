@@ -8,6 +8,7 @@
 	.extern red_led_on
 	.extern both_off
 	.extern led_update
+	.extern buzzer_set_period
 	.global dimmer_advance
 	
 jt:
@@ -27,13 +28,18 @@ dimmer_advance:
 	;; switch table options
 	;; same order as in source
 case0:	call #red_led_on	; red_led_on()
+	mov #500, r12
+	call #buzzer_set_period	; buzzer_set_period(500)
 	add.b #1, &changed	; changed++
 	jmp end			; break
 
 case1:	call #both_off		; both_off()
+	mov #50, r12
+	call #buzzer_set_period	; buzzer_set_period(50)
 	mov.b #0, &changed	; changed = 0
 	jmp end			; break
-end:	mov r12, &led_changed	; led_changed = 1
+end:	mov.b #1, r12
+	mov r12, &led_changed	; led_changed = 1
 	call #led_update	; led_update()
 	mov.b #1, r12		; this is to return 1
 	pop r0
